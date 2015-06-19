@@ -29,6 +29,8 @@ gem 'bugsnag'
 gem 'slack-notifier'
 gem 'friendly_id'
 gem 'dotenv-rails'
+gem 'carrierwave'
+gem 'fog'
 
 group :development do
   gem 'better_errors'
