@@ -12,6 +12,8 @@ gem 'coffee-rails', '~> 4.1.0'
 
 gem 'pg'
 
+gem 'passenger'
+
 gem 'autoprefixer-rails'
 gem 'delayed_job'
 gem 'delayed_job_active_record'
@@ -64,5 +66,5 @@ end
 group :production do
   gem 'rails_12factor'
   gem 'rack-timeout'
-  gem 'unicorn'
+  # gem 'unicorn'
 end
