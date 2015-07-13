@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.2.2'
 
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -20,7 +20,7 @@ gem 'delayed_job_active_record'
 gem 'haml-rails'
 gem 'simple_form', '~> 3.1.0'
 gem 'pygments.rb'
-gem 'redcarpet', github: 'vmg/redcarpet', branch: 'master'
+gem 'redcarpet'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'draper'
