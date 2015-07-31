@@ -20,7 +20,7 @@ gem 'delayed_job_active_record'
 gem 'haml-rails'
 gem 'simple_form', '~> 3.1.0'
 gem 'pygments.rb'
-gem 'redcarpet'
+gem 'redcarpet', '~> 3.3.2'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'draper'
@@ -47,7 +47,8 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.2.0'
-  gem 'factory_girl_rails', '~> 4.2.1'
+  gem 'spring-commands-rspec'
+  gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker'
   gem 'pry-rails'
   gem 'pry-byebug'
@@ -58,6 +59,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'database_cleaner'
   gem 'capybara'
   gem 'codeclimate-test-reporter', require: nil
   gem 'climate_control'

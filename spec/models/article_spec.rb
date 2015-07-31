@@ -1,6 +1,6 @@
-require "spec_helper"
+require "rails_helper"
 
-describe Article do
+RSpec.describe Article do
   describe "#after_save" do
     let(:article) { create(:article) }
     let(:user) { create(:user) }
@@ -210,26 +210,26 @@ describe Article do
   end
 
   describe ".text_search" do
+    before { 100.times { create :article } }
+
     let!(:article) { create :article, title: "Pumpernickel Stew", content: "Yum!"}
 
     it "does partial title matching" do
-      result = Article.text_search "Pumpernick"
-      expect(result).to include(article)
+      result = Article.text_search "Pumper"
+      expect(result.first).to eq(article)
     end
 
     it "does full title matching" do
       result = Article.text_search article.title
-      expect(result).to include(article)
+      expect(result.first).to eq(article)
     end
 
     it "does partial content matching" do
-      skip("text_search only does fuzzy matching on title for now")
       result = Article.text_search "yum"
       expect(result).to include(article)
     end
 
     it "does full content matching" do
-      skip("text_search only does fuzzy matching on title for now")
       result = Article.text_search article.content
       expect(result).to include(article)
     end
