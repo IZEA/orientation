@@ -23,7 +23,10 @@ internal question someone might have about our organization:
 
 ![Orientation's Homepage][orientation-homepage]
 
-Here's [how Orientation works](doc/FEATURES.md).
+Here's [how Orientation works](doc/FEATURES.md), you can even 
+[try it out](http://orientation-demo.herokuapp.com) with your little 
+fingers. One restriction is that you'll need a Google Apps account 
+in order to sign in.
 
 ### Authentication
 
@@ -154,6 +157,10 @@ this out](doc/OAUTH.md).
 
 [orientation-logo]: https://github.com/olivierlacan/orientation/blob/master/public/orientation_logo.png
 [orientation-homepage]: https://cloud.githubusercontent.com/assets/65950/6814712/66cb4684-d281-11e4-800c-329726411b7e.png
+
+## Contributions
+
+We welcome those with open arms but we kindly ask that you [read our contribution guidelines](CONTRIBUTING.md) before submitting pull requests. :heart:
 
 ## License
 

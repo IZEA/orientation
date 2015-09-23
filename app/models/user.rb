@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   def self.prolific
     joins(articles: :author).
       select('users.*, count(articles.id) as articles_count').
-      group('users.id').
+      group(:id).
       order('articles_count DESC')
   end
 
@@ -58,17 +58,15 @@ class User < ActiveRecord::Base
 
     articles = self.articles.stale.select(&:ready_to_notify_author_of_staleness?)
     article_ids = articles.map(&:id)
-    Delayed::Job.enqueue(StalenessNotificationJob.new(article_ids)) unless article_ids.empty?
+    StalenessNotificationJob.perform_later(article_ids) unless article_ids.empty?
   end
 
-  # TODO: improve this query
   def subscribed_to?(article)
-    subscriptions.where(article_id: article.id, user_id: self.id).count > 0
+    subscriptions.where(article_id: article.id, user_id: id).any?
   end
 
-  # TODO: improve this query
   def endorsing?(article)
-    endorsements.where(article_id: article.id, user_id: self.id).count > 0
+    endorsements.where(article_id: article.id, user_id: id).any?
   end
 
   def to_s
