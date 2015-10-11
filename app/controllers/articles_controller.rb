@@ -32,10 +32,12 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(article_params)
     if @article.save
-      respond_with_article_or_redirect
+      @article.subscribe_author
+      flash[:notice] = "Article was successfully created."
     else
-      render :new
+      flash[:error] = error_message(@article)
     end
+    respond_with @article
   end
 
   def edit
@@ -92,7 +94,12 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    respond_with_article_or_redirect if @article.update_attributes(article_params)
+    if @article.update_attributes(article_params)
+      flash[:notice] = "Article was successfully updated."
+    else
+      flash[:error] = error_message(@article)
+    end
+    respond_with @article
   end
 
   def destroy
@@ -117,7 +124,7 @@ class ArticlesController < ApplicationController
       flash[:notice] = "Thanks for taking the time to make someone feel good about their work."
     else
       @article.unendorse_by(current_user)
-      flash[:notice] = "Giving it, and taking it right back. Ruthless, aren't we?"
+      flash[:notice] = "Giving it, then taking it right back. Ruthless, aren't we?"
     end
 
     respond_with_article_or_redirect
@@ -128,6 +135,14 @@ class ArticlesController < ApplicationController
   end
 
   private
+
+  def error_message(article)
+    if article.errors.messages.key?(:friendly_id)
+      "#{article.title} is a reserved word."
+    else
+      "Article could not be #{params[:action]}d."
+    end
+  end
 
   def article_params
     params.require(:article).permit(

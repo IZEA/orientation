@@ -1,5 +1,3 @@
-require "ostruct"
-
 class Article < ActiveRecord::Base
   include Dateable
   extend ActionView::Helpers::DateHelper
@@ -10,7 +8,7 @@ class Article < ActiveRecord::Base
   belongs_to :author, class_name: "User"
   belongs_to :editor, class_name: "User"
   belongs_to :rot_reporter, class_name: "User"
-  
+
   has_many :articles_tags, dependent: :destroy
   has_many :tags, through: :articles_tags, counter_cache: :tags_count
   has_many :subscriptions, class_name: "ArticleSubscription", counter_cache: true, dependent: :destroy
@@ -21,7 +19,7 @@ class Article < ActiveRecord::Base
   attr_reader :tag_tokens
 
   validates :title, presence: true
-
+  
   after_save :update_subscribers
   after_save :notify_slack
   after_destroy :notify_slack
@@ -147,6 +145,10 @@ class Article < ActiveRecord::Base
     self.subscriptions.find_or_create_by!(user: user)
   end
 
+  def subscribe_author
+    subscriptions.create(user: author)
+  end
+
   # @user - the user to unsubscribed from this article
   # Returns true if the unsubscription was successful
   # Returns false if there was no subscription in the first place
@@ -180,22 +182,18 @@ class Article < ActiveRecord::Base
     title
   end
 
-  def to_speakerphone
-    OpenStruct.new(author: author.name, title: title, slug: slug)
-  end
-
-  def to_param
-    slug
-  end
-
   def unarchive!
     update_attribute(:archived_at, nil)
+  end
+
+  def subscribers_to_update
+    subscriptions.reject { |s| s.user == editor }
   end
 
   private
 
   def update_subscribers
-    subscriptions.each do |subscription|
+    subscribers_to_update.each do |subscription|
       subscription.send_update
     end
   end
@@ -209,10 +207,14 @@ class Article < ActiveRecord::Base
   end
 
   def state
-    if created?
-      :created
-    elsif destroyed?
+    if destroyed?
       :destroyed
+    elsif created?
+      :created
+    elsif archived_at?
+      :archived
+    elsif rotted_at?
+      :rotten
     else
       :updated
     end
